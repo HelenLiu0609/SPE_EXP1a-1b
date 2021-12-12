@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SPE_covid_Questionnaire_Helen Liu</title>
+    <!-- 在这里load所有script里需要调用的插件 -->
+    <script src="../jspsych.js"></script>
+    <script src="../plugins/jspsych-fullscreen.js"></script>
+    <script src="../plugins/jspsych-instructions.js"></script>
+    <script src="../plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="../plugins/jspsych-call-function.js"></script>
+    <script src="../plugins/jspsych-html-button-response.js"></script>
+    <script src="../plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <!-- survey部分用到的插件 -->
+    <script src="../plugins/jspsych-survey-html-form.js"></script>
+    <script src="../plugins/jspsych-survey-likert.js"></script>
+    <script src="../plugins/jspsych-survey-multi-select.js"></script>
+    <script src="../plugins/jspsych-survey-multi-choice.js"></script>
+    <link rel="stylesheet" href="../css/jspsych.css">
+
+    <head>
+        <style>
+            body {
+                background-color: rgb(125, 125, 125);
+                color: white;
+            }
+        </style>
+    </head>
+
+</head>
+
+<body></body>
+<script>
+    /* 写在前面 */
+
+    /* 目前待解决问题 */
+    //是否需要统一几点评分？
+    // likert_trial_self_measurement 项目确认
+    //csv存储data标准化格式
+
+    /* create timeline */
+    var timeline = [];
+
+    // 进入全屏 
+    var fullscreen_trial = {
+        type: 'fullscreen',
+        fullscreen_mode: true,
+        message: "<p style = 'color : white'>填写本问卷需要全屏模式</p >",
+        button_label: "点击这里进入全屏"
+    }
+    timeline.push(fullscreen_trial);
+
+    /* define welcome message trial */
+    var welcome = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>您好，欢迎参与填写本问卷。</p>
+   <p>为充分保障您的权利，请确保你已经知晓并同意《参与实验同意书》以及《数据公开知情同意书》。</p>
+   <p>如果你未见过上述内容，请咨询实验员。</p>
+   <p>果您选择继续，则表示您已经清楚两份知情同意书的内容并同意。</p>
+   <p> 按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(welcome);
+
+    // instruction for information collection
+    var instruction_information = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>本问卷大约需要xx分钟。共分为4个部分:</p>
+   <p>在第一个部分需要您填写一些基本个人信息及家庭信息。</p>
+   <p>在第二个部分需要您回答一些新冠疫情防控对您个人的影响的相关问题。</p>
+   <p>在第三个部分需要您回答一些政府对于新冠疫情防控对您的影响的相关问问题。</p>
+   <p>在第四个部分需要您回答一些新冠疫情防控对家庭的影响的相关问题。</p>
+   <p>您在本问卷中回答的所有的个人信息和内容将被严格保密。</p>
+   <p>本问卷答案没有正确与错误之分，请您基于真实情况作答。</p>
+   <p>请按任意键进入第一部分问卷。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_information);
+</script>
+
+<script type="text/javascript">
+    /* create timeline */
+    var timeline = [];
+
+    /* basic data collection instructions trial 被试基本信息收集 */
+    var basic_information_instruction = {
+        type: "html-keyboard-response",
+        stimulus: `
+     <p>本问卷首先需要您填写一些基本个人和家庭相关信息。</p>
+     <p>您的个人信息和回答内容将被严格保密。</p>
+     <p>请您回答所有的问题。</p>
+     <p> 按任意键至下页。</p>
+     `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(basic_information_instruction);
+
+    var basic_information = [{
+        // 实验被试基本信息收集
+        //基本信息（性别、年龄、家庭背景/SES、当前居住地、联系方式）
+        type: "survey-html-form",
+        preamble: "<p style =' color : white'>你的名字是</p>",
+        html: "<p><input name='Q0' type='text' value='' required/></p>",
+        button_label: "继续",
+        on_finish: function (data) {
+        }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>你的性别</p>",
+        choices: ['男', '女', '其他'],
+        on_finish: function (data) {
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style = 'color : white'>你的出生年</p>",
+        html: `<p>
+        <input name="Q0" type="number" placeholder="1900~2020" min=1900 max=2020 oninput="if(value.length>4) value=value.slice(0,4)" required />
+        </p>`,
+        button_label: '继续',
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您所居住的城市位于</p>",
+        choices: ['农村', '城市'],
+        on_finish: function (data) { }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style =' color : white'>您所居住的城市是</p>",
+        html: "<p><input city='Q0' type='text' value='' required/></p>",
+        button_label: "继续",
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style =' color : white'>您的职业是</p>",
+        html: "<p><input occupation='Q0' type='text' value='' required/></p>",
+        button_label: "继续",
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style = 'color : white'>您的教育经历是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>小学以下</option>
+                <option value=2>小学</option>
+                <option value=3>初中</option>
+                <option value=4>高中</option>
+                <option value=5>大学</option>
+                <option value=6>硕士</option>
+                <option value=7>博士</option>
+                <option value=8>其他</option>
+                </select></p>`
+        },
+        button_label: '继续',
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style =' color : white'>您父亲的职业是</p>",
+        html: "<p><input father ='Q0' type='text' value='' required/></p>",
+        button_label: "继续",
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style =' color : white'>您母亲的职业是</p>",
+        html: "<p><input mother ='Q0' type='text' value='' required/></p>",
+        button_label: "继续",
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style = 'color : white'>您父亲的教育经历是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>小学以下</option>
+                <option value=2>小学</option>
+                <option value=3>初中</option>
+                <option value=4>高中</option>
+                <option value=5>大学</option>
+                <option value=6>硕士</option>
+                <option value=7>博士</option>
+                <option value=8>其他</option>
+                </select></p>`
+        },
+        on_load: function () {
+        },
+        button_label: '继续',
+        on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style = 'color : white'>您母亲的教育经历是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>小学以下</option>
+                <option value=2>小学</option>
+                <option value=3>初中</option>
+                <option value=4>高中</option>
+                <option value=5>大学</option>
+                <option value=6>硕士</option>
+                <option value=7>博士</option>
+                <option value=8>其他</option>
+                </select></p>`
+        },
+        on_load: function () {
+
+        },
+        button_label: '继续',
+        on_finish: function (data) {
+        }
+    }, {//社会阶级
+        type: "instructions",
+        pages: ['<img src="img/social.png"></img>' + '<p>请您想象一下这个梯子代表了中国不同的家庭所处的不同的社会阶层。</p><p>等级越高，表示其所处的阶层地位越高。</p>',
+            '<p>例如，01 代表社会最底层，来自这些家庭的人其生活境况是最糟糕的，教育水平最低、工作最不体面、收入最低下。</p>',
+            '<p>10 代表社会最高层，来自这些家庭的人其生活境况是最优裕的，他们受教育程度高、工作最体面、收入最高。</p>',
+        ],
+        show_clickable_nav: true,
+        show_page_number: true,
+        button_label_previous: '返回',
+        button_label_next: '继续',
+    }, {//社会阶级
+        type: "survey-html-form",
+        preamble: "<p style =' color : white'>请结合您的状况，思考一下您觉得自己出身的家庭位于梯子的哪一级？(1-10)</p>",
+        html: "<p><input level='Q0' type='text' value='' required/></p>",
+        button_label: "继续",
+        on_finish: function (data) { }
+    },
+    ];
+    timeline.push({
+        timeline: basic_information,
+    });
+
+
+    // 新冠疫情防控对个人的影响
+    // 12项一般健康问卷 GHQ_12
+    var instruction_GHQ_12 = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>接下来的几个问题，我们将了解您最近几周内的身体健康状况。</p>
+   <p>这里的问题是针对从2-3周前到现在的状况。</p>
+   <p>在以下问题中，请选择最适当的一栏。</p>
+   <p>请您回答所有的问题。</p>
+   <p>按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_GHQ_12);
+
+    var covid_information_self_GHQ_12 = [{ //12项一般健康问卷//回答前两项者计0分，回答后两项者计1分，总分范围为0-12分，3分为切分值。
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>在做日常的事情的时候，您能集中精神吗？</p>",
+        choices: ['能集中', '和平时一样', '不能集中', '完全不能'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>有由于过分担心而失眠的情况吗？</p>",
+        choices: ['没有过', '和平时一样', '有过', '总这样'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您觉得自己是有用的人吗？</p>",
+        choices: ['有用', '和平时一样', '没有用', '完全没有用'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您觉得自己有决断力吗？</p>",
+        choices: ['有', '和平时一样', '没有', '完全没有'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您总是处于紧张状态吗</p>",
+        choices: ['不紧张', '和平时一样', '紧张', '非常紧张'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您觉得自己不能解决问题吗？</p>",
+        choices: ['能', '和平时一样', '不能', '完全不能'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您能享受日常活动吗？</p>",
+        choices: ['能', '和平时一样', '不能', '完全不能'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您能够面对你所面临的问题吗？</p>",
+        choices: ['能', '和平时一样', '不能', '完全不能'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您感到痛苦、忧虑吗？</p>",
+        choices: ['不觉得', '和平时一样', '觉得', '总是觉得'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您失去自信了吗？</p>",
+        choices: ['没有', '和平时一样', '失去', '完全失去'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您觉得自己是没有价值的人吗？</p>",
+        choices: ['没有觉得', '和平时一样', '觉得', '总是觉得'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您觉得所有的事情都顺利吗？</p>",
+        choices: ['顺利', '和平时一样', '不顺利', '完全不顺利'],
+        on_finish: function (data) { }
+    },
+    ];
+    timeline.push({
+        timeline: covid_information_self_GHQ_12,
+    });
+
+    // Chinese Version of the Fear of COVID-19 Scale
+    var instruction_fear_covid_19 = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>接下来的几个问题，我们将了解您对新型冠肺炎的感受以及想法。</p>
+   <p>这里的问题是针对从2-3周前到现在的状况。</p>
+   <p>在以下问题中，请选择最适当的一栏。</p>
+   <p>请您回答所有的问题。</p>
+   <p>按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_fear_covid_19);
+
+    var scale = ["非常不符合", "不符合", "不确定", "符合", "非常符合"];
+
+    var likert_trial = { //记分：1-5.A total score is calculated by adding up each item score (ranging from 7 to 35
+        type: 'survey-likert',
+        questions: [
+            { prompt: "我极其害怕新冠肺炎。", labels: scale, required: true },
+            { prompt: "想到新冠肺炎，我会感到不安。", labels: scale, required: true },
+            { prompt: "想到新冠肺炎，我会手心出汗。", labels: scale, required: true },
+            { prompt: "我害怕因为新冠肺炎而丧命。", labels: scale, required: true },
+            { prompt: "在社交媒体上看到新冠肺炎相关的新闻和信息，我会感到紧张或焦虑。", labels: scale, required: true },
+            { prompt: "我因为担心感染新冠肺炎而失眠。", labels: scale, required: true },
+            { prompt: "想到感染新冠肺炎，我会心跳加速或心悸。", labels: scale, required: true }
+        ],
+        randomize_question_order: true, //随机呈现
+        scale_width: 500
+    };
+
+    timeline.push({
+        timeline: likert_trial
+    });
+
+    // 防疫措施调查问卷个人
+    //covid_information_self_measurement
+
+    var instruction_covid_information_self_measurement = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>针对目前我国发生的新型冠状病毒感染的肺炎病例，</p>
+   <p>为了了解您对相关健康知识的需求，以更好地开展疾病防控，</p>
+   <p>现邀请您参加本次调查，请您对下列问题进行1-7点评分（1=非常不同意，4=不清楚，7=非常同意）。</p>
+   <p>请您回答所有的问题。</p>
+   <p>按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_covid_information_self_measurement);
+
+    var scale_2 = ["非常不同意", "比较不同意", "有些不同意", "不清楚", "有些同意", "比较同意", "非常同意"];
+    var likert_trial_1 = {
+        type: 'survey-likert',
+        questions: [
+            { prompt: "为了保护自己与他人，都应该接受接种新型冠状病毒疫苗。", labels: scale_2, required: true },
+            { prompt: "您非常关注新型冠状病毒感染的肺炎疫情信息。", labels: scale_2, required: true },
+            { prompt: "您非常了解新型冠状病毒的临床症状。", labels: scale_2, required: true },
+            { prompt: "您十分了解新型冠状病毒主要传播途径。", labels: scale_2, required: true },
+            { prompt: "您打喷嚏和咳嗽时会捂住嘴巴。", labels: scale_2, required: true },
+            { prompt: "您与他人用餐时避免共用餐具（例如筷子）。", labels: scale_2, required: true },
+            { prompt: "您常用肥皂和清水洗手。", labels: scale_2, required: true },
+            { prompt: "您咳嗽、揉鼻子或打喷嚏后立即洗手。", labels: scale_2, required: true },
+            { prompt: "无论有无感染症状，您都会戴口罩。", labels: scale_2, required: true },
+        ],
+        randomize_question_order: true, //随机呈现
+        scale_width: 500
+    };
+
+    timeline.push({
+        timeline: likert_trial_1
+    });
+
+    // 政府对于新冠疫情防控对您的影响
+
+    //问卷1:
+    //每一陈述都有“是”、“否”两种回答，分别记为-1、1，
+    //每个被调查者的分数就是各道题回答所得分数的加总，
+    //总分越低说明政府的防疫举措越充分，疫情防控对人们的影响越大。
+    var instruction_covid_government_self_1 = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>请您根据个人经验，对以下问题进行“是”或“否”选择。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_covid_government_self_1);
+    var covid_government_self_1 = [
+        {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您是否有在酒店或其他隔离点隔离的经历吗？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在地区是否采取严控出门和定期消毒的疫情防控措施？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在地区是否采取发放口罩、酒精和消毒液等防疫工具？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在地区是否进行社区疫情防控知识宣传的疫情防控措施？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在地区是否采取帮忙采购的疫情防控措施？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您了解的当地政府是否有市场调查与检查的疫情防控工作？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您了解的当地政府是否有病例通报和流行病调查的疫情防控工作？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您了解的当地政府是否有密切接触者追踪的疫情防控工作？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您了解的当地政府是否有启动应急响应和举行疫情防控应急演练的疫情防控工作？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您了解的当地政府是否有全区核酸检测和宣传教育的疫情防控工作？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在区域是否采取了开展健康教育的措施来防控疫情？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在区域是否有及时采取措施来防控疫情？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在区域是否采取了外来人员进行登记并隔离14天的措施来防控疫情？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在区域是否采取了封锁部分交通，限制出行的措施来防控疫情？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您所在区域是否采取了出行必须戴口罩，一人一码电子出行的措施来防控疫情？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        },
+    ];
+    timeline.push({
+        timeline: covid_government_self_1,
+    });
+    //问卷2
+    //每一陈述都有从非常同意7到不清楚4到非常不同意1分共七种回答，
+    //每个被调查者的态度总分就是他对各道题回答所得分数的加总，
+    //总分越高说明政府的防疫举措越充分，疫情防控对人们的影响越大，人们的满意度越高。
+    var instruction_covid_government_self_2 = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>为了更好地认识和了解抗击疫情对人们生活、经济和健康的影响，我们想了解您所在地区抗击新型冠状病毒期间的相关情况，</p>
+   <p>请根据您自己的认知，对下列问题进行1-7点评分（1=非常不同意，4=不清楚，7=非常同意）。</p>
+   <p>请您回答所有的问题。</p>
+   <p>按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_covid_government_self_2);
+
+    var scale_2 = ["非常不同意", "比较不同意", "有些不同意", "不清楚", "有些同意", "比较同意", "非常同意"];
+    var likert_trial_2 = {
+        type: 'survey-likert',
+        questions: [
+            { prompt: "您认为您所在地区的疫情防控安全措施实施的情况非常到位。", labels: scale_2, required: true },
+            { prompt: "您认为您所在地区的居民对政府号召的响应程度非常好。", labels: scale_2, required: true },
+            { prompt: "您认为当地疫情防控工作人员不存在未及时发现感染者或密切接触者，漏报情况的问题。", labels: scale_2, required: true },
+            { prompt: "您认为当地疫情防控工作人员不存在瞒报疫情感染者的情况，疫情防控工作重大疏忽的问题。", labels: scale_2, required: true },
+            { prompt: "您认为当地疫情防控工作人员不存在疫情防控措施落实力度不够，表面应付而已的问题。", labels: scale_2, required: true },
+            { prompt: "您认为当地疫情防控工作人员不存在擅离工作岗位，未能尽职的问题。", labels: scale_2, required: true },
+            { prompt: "您认为当地疫情防控工作人员不存在其他突出问题。", labels: scale_2, required: true },
+            { prompt: "抗疫之战基本胜利后，您认为出入公共场所还需要测量体温并出示健康码。", labels: scale_2, required: true },
+            { prompt: "疫情过后，您认为出门还有必要戴口罩。", labels: scale_2, required: true },
+        ],
+        randomize_question_order: true, //随机呈现
+        scale_width: 500
+    };
+
+    timeline.push({
+        timeline: likert_trial_2
+    });
+
+    //新冠肺炎对家庭生活、经济和健康影响的调查问卷
+    //家庭经济基本信息调查
+    var instruction_covid_government_family_1 = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>为了更好地认识和了解抗击疫情对人们生活、经济和健康的影响，</p>
+   <p>我们想了解您的家庭在抗击新型冠状病毒期间的相关情况，</p>
+   <p>请根据您自己的认知，在选项中选择您倾向的答案。</p>
+   <p>按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(instruction_covid_government_family_1);
+
+    var family_basic_information = {
+        type: 'survey-multi-select',
+        questions: [
+            {
+                prompt: "您家庭的正常月收入范围是？",
+                options: ["5000以下", "5000-10000", "10000-15000", "15000以上"],
+                horizontal: true,
+                required: true,
+                name: '月收入'
+            },
+            {
+                prompt: "您的家庭成员人数？",
+                options: ["1人", "2-3人", "4人及以上"],
+                horizontal: true,
+                required: true,
+                name: '家庭成员人数'
+            },
+            {
+                prompt: "疫情对您家庭经济影响大吗？",
+                options: ["很大", "一般", "较小", "没有影响"],
+                horizontal: true,
+                required: true,
+                name: '疫情影响'
+            },
+            {
+                prompt: "疫情期间您家庭的月收入变化范围？",
+                options: ["减少1000元以下", "减少1000-3000元", "减少3000-5000元", "减少5000元以上", "收入增加"],
+                horizontal: true,
+                required: true,
+                name: '月收入变化'
+            },
+            {
+                prompt: "你家庭收入的主要构成？",
+                options: ["父母收入", "个人收入", "政府补贴", "股票、基金等投资收入", "其他"],
+                horizontal: true,
+                required: true,
+                name: '家庭收入构成'
+            },
+            {
+                prompt: "疫情结束后，所有人员复工，您的家庭经济恢复状况如何？",
+                options: ["全部恢复", "基本恢复", "未恢复"],
+                horizontal: true,
+                required: true,
+                name: '经济恢复'
+            }
+        ],
+        post_trial_gap: 20000,
+        randomize_question_order: true
+    };
+    timeline.push(family_basic_information);
+
+    //家庭健康、生活调查 Part 1
+    var covid_information_family_measurement = [
+        {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>疫情防控期间，您是否进行过短暂隔离</p>",
+            choices: ['7天以内', '7-14天', '14天以上'],
+            on_finish: function (data) { }
+        },
+    ];
+    timeline.push(covid_information_family_measurement);
+
+    var multi_choice_block = {
+        type: 'survey-multi-choice',
+        questions: [
+            { prompt: "疫情期间，是否有亲戚曾经感染过新型冠状病毒？", name: '亲戚', options: ["是", "否"], required: true },
+            { prompt: "疫情期间，是否有朋友或同事曾经感染过新型冠状病毒？", name: '朋友或同事', options: ["是", "否"], required: true },
+            { prompt: "疫情期间，是否有自己的社区居民曾经感染过新型冠状病毒？", name: '社区居民', options: ["是", "否"], required: true },
+            { prompt: "您是否有担心过自己感染新型冠状病毒？", name: '自己', options: ["是", "否"], required: true },
+            { prompt: "您是否有担心过自己家人感染新型冠状病毒？", name: '家人', options: ["是", "否"], required: true }
+        ]
+    };
+
+    // 家庭健康、生活调查 Part 2
+    var instruction_covid_information_family_2 = {
+        type: "html-keyboard-response",
+        stimulus: `
+   <p>请根据您自己的认知，对下列问题进行1-7点评分（1=非常不同意，4=不清楚，7=非常同意）。</p>
+   <p>请您回答所有的问题。</p>
+   <p>按任意键至下页。</p>
+   `,
+        choices: jsPsych.ALL_KEYS,
+    };
+    timeline.push(nstruction_covid_information_family_2);
+
+    var scale = ["非常不同意", "比较不同意", "有些不同意", "不清楚", "有些同意", "比较同意", "非常同意"];
+
+    var likert_trial_family = { //记分：1-7.A total score is calculated by adding up each item score (ranging from 7 to 49
+        type: 'survey-likert',
+        questions: [
+            { prompt: "您认为待在家里不外出，能够保护自己和家人，避免感染新型冠状病毒。", labels: scale, required: true },
+            { prompt: "您认为定期清洁双手和避免接触眼睛、鼻子和嘴巴能够保护自己和家人，避免感染新型冠状病毒。", labels: scale, required: true },
+            { prompt: "您认为补充维生素C和喝板蓝根不能保护自己和家人，避免感染新型冠状病毒。", labels: scale, required: true },
+            { prompt: "您认为开窗通风和出门戴口罩能够保护自己和家人，避免感染新型冠状病毒。", labels: scale, required: true },
+            { prompt: "您认为与他人保持至少1米距离能够保护自己和家人，避免感染新型冠状病毒。", labels: scale, required: true },
+            { prompt: "为了防止新型冠状病毒的传播，您和家人有当志愿者，为社会贡献自己的一份力量。", labels: scale, required: true }
+        ],
+        randomize_question_order: true, //随机呈现
+        scale_width: 500
+    };
+
+    timeline.push({
+        timeline: likert_trial_family,
+    });
+</script>
+
+<script>
+    /*set up finish message*/
+    var finish = {
+        type: "html-keyboard-response",
+        stimulus: `
+    <p>感谢您填写本问卷，请按任意键下载cvs，并将下载好的csv发送给研究者。</p>
+    <p>请你手动通过 ESC 键退出全屏后关闭本页面。再次感谢您参与填写本问卷！</p>`
+    };
+    timeline.push(finish);
+
+    /*experiment structure*/
+    //实验流程结构 
+    var timeline = [];
+    timeline.push(fullscreen_trial); //全屏
+    timeline.push(welcome); //欢迎
+    timeline.push(instruction_information);//基本个人信息填写指导语
+    timeline.push({
+        timeline: basic_information //被试及其家庭基本信息收集
+    });
+
+    //新冠对个人的影响
+    timeline.push(instruction_GHQ_12),
+        timeline.push({
+            timeline: covid_information_self_GHQ_12 //12项一般健康问卷 GHQ_12
+
+        });
+    timeline.push(instruction_fear_covid_19),
+        timeline.push(likert_trial), // Chinese Version of the Fear of COVID-19 Scale
+        timeline.push(instruction_covid_information_self_measurement),//防疫措施调查问卷个人
+        timeline.push(likert_trial_1),
+
+        //政府政策对个人的影响
+        timeline.push(instruction_covid_government_self_1),
+        timeline.push({
+            timeline: covid_government_self_1
+        });
+    timeline.push(instruction_covid_government_self_2),
+        timeline.push(likert_trial_2),
+        timeline.push(instruction_covid_government_family_1),
+
+        //新冠对家庭的影响
+        timeline.push({    //家庭经济基本信息调查
+            timeline: family_basic_information
+        });
+    timeline.push({
+        timeline: covid_information_family_measurement
+    });
+    timeline.push(multi_choice_block),//家庭健康、生活调查 Part 1
+        timeline.push(instruction_covid_information_family_2),
+        timeline.push(likert_trial_family), //家庭健康、生活调查 Part 2
+
+        //结束语  
+        timeline.push(finish)
+
+    /*start the program*/
+
+    jsPsych.init({
+        timeline: timeline,
+        on_finish: function () {
+            jsPsych.data.get().localSave("csv", "data_v1.csv"); //原始数据读取和保存
+        }
+    });
+</script>
