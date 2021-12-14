@@ -57,8 +57,8 @@
   var fullscreen_trial = {
     type: 'fullscreen',
     fullscreen_mode: true,
-    message: "<p style = 'color : white'>实验需要全屏模式</p >",
-    button_label: "点击这里进入全屏"
+    message: "<p style = 'color : white'>实验需要全屏模式，实验期间请勿退出全屏。</p >",
+    button_label: "点击这里进入全屏。"
   }
   timeline.push(fullscreen_trial);
 
@@ -208,9 +208,9 @@
       '<img src="img/Tri.png"></img>' + '<p>三角</p>',
       '<img src="img/Cir.png"></img>' + '<p>圆形</p>',
       '<img src="img/Squ.png"></img>' + '<p>方形</p>',
-      '<p>请您努力记入如下按键：当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
+      '<p>请您努力记入如下按键对应：当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
       '<p>如果对本实验还有不清楚之处，请立即向实验员咨询。</p>',
-      '<p> 如果你明白了规则，请点击继续开始练习。</p>',
+      '<p> 如果你明白了规则，请点击继续，开始练习。</p>',
     ],
     show_clickable_nav: true,
     show_page_number: true,
@@ -265,7 +265,8 @@
         ],
         choices: ['f', 'j'], // The participant can respond to the stimuli using the 'f' or 'j' key.
         response_start_time: 1000, // 定义被试可以开始反应时间
-        // 如果下方需要提示按键的话：canvas_height: 500, prompt: '一致时请按f键，否则按j键.',
+        // 如果下方需要提示按键的话：
+        canvas_height: 700, prompt: '一致时请按f键，否则按j键.',
         data: jsPsych.timelineVariable("identify"),
         // 记录下反应，以及反应是正确还是错误：on_finish function
         on_finish: function (data) {
@@ -286,10 +287,10 @@
           let keypress = jsPsych.data.get().last(1).values()[0].key_press; // 被试按键
           let trial_keypress = jsPsych.data.get().last(1).values()[0].correct; //该trial正确的按键
           let time = jsPsych.data.get().last(1).values()[0].rt; //被试反应时
-          if (trial_keypress && keypress) {
-            return "<span class='add_' style='color:black'> 正确! </span>"
-          } else if (time > 1500) {
-            return "太慢!"
+          if (time > 1500) { //大于1500为过慢
+            return "<span class='add_' style='color:black'> 太慢! </span>"
+          } else if (keypress && trial_keypress) {
+            return "正确!"
           } else if (time < 200) { //小于两百为过快反应
             return "过快!"
           } else {
@@ -470,8 +471,8 @@
         ],
         choices: ['f', 'j'], // The participant can respond to the stimuli using the 'f' or 'j' key.
         response_start_time: 1000, // 被试可以开始反应时间
-        canvas_height: 500, // 如果下方需要提示按键
-        prompt: '一致时请按f键，否则按j键.',
+        //canvas_height: 500, // 如果下方需要提示按键
+        //prompt: '一致时请按f键，否则按j键.',
         data: jsPsych.timelineVariable("identify"),
         // 加反应正确还是错误 on_finish function
         on_finish: function (data) {
