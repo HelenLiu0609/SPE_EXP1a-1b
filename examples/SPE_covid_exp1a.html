@@ -58,7 +58,7 @@
     type: 'fullscreen',
     fullscreen_mode: true,
     message: "<p style = 'color : white'>实验需要全屏模式，实验期间请勿退出全屏。</p >",
-    button_label: "点击这里进入全屏。"
+    button_label: "点击这里进入全屏"
   }
   timeline.push(fullscreen_trial);
 
@@ -202,20 +202,25 @@
   /* define instructions trial */
   var instructions = {
     type: "instructions",
-    pages: ['<p>实验说明：</p><p>您好，欢迎参加本次实验。本次实验大约需要30分钟完成。</p>',
+    pages: ['<p>实验说明：</p><p>您好，欢迎参加本次实验。本次实验大约需要15分钟完成。</p>',
       '<p>任务概况：</p><p>本次实验您需要完成知觉匹配任务。</p><p>您将学习以下几种几何图形与不同标签的对应关系。</p>',
-      '<p>请您努力记下如下对应关系</p>',
+      '<p>具体来说，在实验中，您需要注视电脑屏幕的中央及屏幕上出现的视觉内容。</p><p>屏幕上首先出现一个“+”，很快，“+”上方面会出现一个几何图形中，下方会出现文字信息。</p>',
+      '<p>接下来请您努力记下如下图形与文字的对应关系</p>',
       '<img src="img/Tri.png"></img>' + '<p>三角</p>',
       '<img src="img/Cir.png"></img>' + '<p>圆形</p>',
       '<img src="img/Squ.png"></img>' + '<p>方形</p>',
-      '<p>请您努力记入如下按键对应：当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
+      '<p>您的任务是判断几何图形与图形名称或人物标签是否匹配：</p><p>当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
+      '<p>完成匹配任务的练习之后，您将完成3组匹配任务，每组包括72次按键反应，每组完成后会有休息。</p><p>完成一组任务大约需要5分钟，整个实验将持续大约15分钟。</p>',
       '<p>如果对本实验还有不清楚之处，请立即向实验员咨询。</p>',
-      '<p> 如果你明白了规则，请点击继续，开始练习。</p>',
+      '<p> 如果你明白了规则，请点击继续，开始匹配任务的练习。</p>',
     ],
     show_clickable_nav: true,
     show_page_number: true,
     button_label_previous: '返回',
     button_label_next: '继续',
+    on_finish: function () {
+      $("body").css("cursor", "none");
+    } //鼠标消失术，放在要消失鼠标的前一个事件里
   }
   timeline.push(instructions);
 
@@ -328,6 +333,9 @@
       type: 'fixed-repetitions',
       size: 1, // 1 repetitions of each trial for practice 
     },
+    on_finish: function () {
+      $("body").css("cursor", "default"); //鼠标出现
+    }
   }
 
   /* feedback for cotinue practice */
@@ -352,17 +360,20 @@
   var feedback_continue_practice = { //在这里呈现文字recap，让被试再记一下
     type: "instructions",
     pages: ['<p>您的正确率未达到练习要求。</p>',
-      '<p>请您努力记下如下对应关系，再次进行练习。</p>',
+      '<p>请您努力记下如下匹配对应关系，再次进行练习。</p>',
       '<img src="img/Tri.png"></img>' + '<p>三角</p>',
       '<img src="img/Cir.png"></img>' + '<p>圆形</p>',
       '<img src="img/Squ.png"></img>' + '<p>方形</p>',
       '<p>当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
-      '<p> 如果你明白了规则，请按任意键继续开始练习。</p>',
+      '<p> 如果你明白了规则，请按任意键继续练习。</p>',
     ],
     show_clickable_nav: true,
     show_page_number: true,
     button_label_previous: '返回',
     button_label_next: '继续',
+    on_finish: function () {
+      $("body").css("cursor", "none");
+    }
   }
 
   var if_node = { //if_node 用于判断是否呈现feedback，feedback_continue_practice
@@ -420,6 +431,9 @@
                             <div><p class='context'>你正确回答了" + accuracy + "% 的试次。</p>" +
         "<p class='context'>你的平均反应时为" + rt + "毫秒。</p>" +
         "<p class='context'>恭喜你完成练习。按任意键进入正式实验。</p></div>";
+    },
+    on_finish: function () {
+      $("body").css("cursor", "none");
     }
   }
   timeline.push(feedback_goformal);
@@ -513,6 +527,9 @@
     sample: {
       type: 'fixed-repetitions',
       size: 6, // 6 repetitions of each trial
+    },
+    on_finish: function () {
+      $("body").css("cursor", "default"); //鼠标出现
     }
   }
   timeline.push(formal);
@@ -534,6 +551,9 @@
                             <div><p class='context'>你正确回答了" + accuracy + "% 的试次。</p>" +
         "<p class='context'>你的平均反应时为" + rt + "毫秒。</p>" +
         "<p class='context'>请按任意键进入休息</p></div>";
+    },
+    on_finish: function () {
+      $("body").css("cursor", "default"); //鼠标出现
     }
   };
   timeline.push(feedback_block);
@@ -553,6 +573,9 @@
     },
     choices: ["结束休息"],
     trial_duration: 60000,
+    on_finish: function () {
+      $("body").css("cursor", "none"); //鼠标消失
+    }
   }
   timeline.push(rest);
 
