@@ -24,7 +24,7 @@
       body {
         background-color: rgb(255, 255, 255);
         color: black;
-        overflow: hidden; 
+        overflow: hidden;
       }
     </style>
   </head>
@@ -268,8 +268,8 @@
         ],
         choices: ['f', 'j'], // The participant can respond to the stimuli using the 'f' or 'j' key.
         response_start_time: 1000, // 定义被试可以开始反应时间
-        // 如果下方需要提示按键的话：
-        canvas_height: 700, prompt: '一致时请按f键，否则按j键.',
+        //canvas_height: 500, // 如果下方需要提示按键
+        //prompt: '一致时请按f键，否则按j键.',
         data: jsPsych.timelineVariable("identify"),
         // 记录下反应，以及反应是正确还是错误：on_finish function
         on_finish: function (data) {
