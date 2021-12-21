@@ -17,6 +17,6 @@ This is the link to run [The Questionnaire](https://helenliu0609.github.io/SPE_E
 
 jsPsych Raw Code
 ---
-The [raw code ](https://helenliu0609.github.io/SPE_EXP1a-1b/examples)
+The [raw code ](/SPE_EXP1a-1b/examples)
 
-If you want to run the experiment remotely on your device, you should ensure that all the pugins used is included in your folder. 
+Note: If you want to run the experiment remotely on your device, you should ensure that all the js. pugins are included in the exp folder. 
