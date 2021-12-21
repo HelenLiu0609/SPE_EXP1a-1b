@@ -1,6 +1,6 @@
 SEP_EXP1a-1b
 ---
-This is an example demo experiemnt made from Jspsych in the Covid-tagging project
+This is an example demo experiemnt made from jsPsych in the Covid-tagging project
 
 
 jsPsych environment 
