@@ -17,6 +17,14 @@ This is the link to run [The Questionnaire](https://helenliu0609.github.io/SPE_E
 
 jsPsych Raw Code
 ---
-The [raw code ](/examples)
+You can easily modify and set up your own experiment using the [raw code ](/examples) 
 
-Note: If you want to run the experiment remotely on your device, you should ensure that all the js. pugins are included in the exp folder. 
+Note
+---
+While you are running the experiment...
+
+- Remember to ask the participants to send the raw csv file to you directly. Do not open the raw csv and modify anything. Otherwise,reading errors may occur.  
+
+If you want to run the experiment remotely（eg., from your local terminal):
+
+- you should download all the folders in the current repository (to ensure that all the js. pugins are included in the folder). 
