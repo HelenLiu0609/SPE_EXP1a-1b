@@ -21,10 +21,9 @@
 
   <head>
     <style>
-      body {
-        background-color: rgb(255, 255, 255);
-        color: black;
-        overflow: hidden;
+     body {
+        background-color: rgb(128, 128, 128);
+        color: white;
       }
     </style>
   </head>
@@ -128,7 +127,7 @@
     }
   }, {
     type: "survey-html-form",
-    preamble: "<p style =' color : black'>你的实验编号是</p>",
+    preamble: "<p style =' color : white'>你的实验编号是</p>",
     html: function () {
       let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["Name"] : "";
       return "<p><input name='Q0' type='text' value='" + data + "' required/></p>";
@@ -139,14 +138,14 @@
     }
   }, {
     type: "html-button-response",
-    stimulus: "<p style = 'color : black'>你的性别</p>",
+    stimulus: "<p style = 'color : white'>你的性别</p>",
     choices: ['男', '女', '其他'],
     on_finish: function (data) {
       info["Sex"] = data.response == 0 ? "Male" : (data.response == 1 ? "Female" : "Other")
     }
   }, {
     type: "survey-html-form",
-    preamble: "<p style = 'color : black'>你的出生年</p>",
+    preamble: "<p style = 'color : white'>你的出生年</p>",
     html: function () {
       let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["BirthYear"] : "";
       return `<p>
@@ -159,7 +158,7 @@
     }
   }, {
     type: "survey-html-form",
-    preamble: "<p style = 'color : black'>您的教育经历是</p>",
+    preamble: "<p style = 'color : white'>您的教育经历是</p>",
     html: function () {
       return `
                 <p><select name="Q0" size=10>
@@ -190,9 +189,9 @@
 
 <script>
   //设置根据屏幕控制显示图形大小方位一致
-  let scale = Math.min($(document).width() / 366, $(document).height() / 658);
+  let scale = Math.min($(document).width() / 1440, $(document).height() / 900);
   $(window).resize(function () {
-    scale = Math.min($(document).width() / 366, $(document).height() / 658);
+    scale = Math.min($(document).width() / 1440, $(document).height() / 900);
   });
 
   var timeline = [];
@@ -227,15 +226,16 @@
     timeline: [
       {
         type: 'psychophysics',
-        background_color: "white",
+        background_color: "grey",
         stimuli: [
           {
             obj_type: 'cross', // fixation
             startX: "center", // location of the cross's center in the canvas
             startY: "center",
-            line_length: 30 * scale, // pixels
+            line_length: 62.5 * scale, // pixels 视角：0.8° x 0.8°
+
             line_width: 5 * scale,
-            line_color: 'black', // You can use the HTML color name instead of the HEX color.
+            line_color: 'white', // You can use the HTML color name instead of the HEX color.
             show_start_time: 500,
             show_end_time: 1000
           },
@@ -243,24 +243,25 @@
             obj_type: 'image',
             file: jsPsych.timelineVariable('Image'),
             startX: "center", // location of the cross's center in the canvas
-            startY: (-128 * 0.8 - 50) * scale, //图形和文字距离 与加号等距
+            startY: -165.29 * scale, //图形和文字距离 与加号等距
             font: (50).toString() + "px 'Arial'",
-            text_color: 'black',
+            text_color: 'white',
             show_start_time: 1000, // ms after the start of the trial
             show_end_time: 1100,
-            scale: 0.8 * scale, // 调整图片大小
+            scale: 0.6456640625 * scale, // 调整图片大小 视角：3.8° x 3.8°
             origin_center: true
           },
           {
             obj_type: 'text',
             file: jsPsych.timelineVariable("word"),
             startX: "center",
-            startY: 100 * scale, //图形和文字距离 与加号等距
+            startY: 165.29 * scale, //图形和文字距离 与加号等距
             content: function () {
               return jsPsych.timelineVariable("word", true);
             },
-            font: `${30 * scale}px 'Arial'`, //字体和颜色设置
-            text_color: 'black',
+            font: `${69.58 * scale}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+
+            text_color: 'white',
             show_start_time: 1000, // ms after the start of the trial
             show_end_time: 1100,
             origin_center: true
@@ -291,7 +292,7 @@
           let trial_keypress = jsPsych.data.get().last(1).values()[0].correct; //该trial正确的按键
           let time = jsPsych.data.get().last(1).values()[0].rt; //被试反应时
           if (time > 1500) { //大于1500为过慢
-            return "<span class='add_' style='color:black'> 太慢! </span>"
+            return "<span class='add_' style='color:white'> 太慢! </span>"
           } else if (keypress && trial_keypress) {
             return "正确!"
           } else if (time < 200) { //小于两百为过快反应
@@ -349,7 +350,7 @@
       });
       let accuracy = Math.round(correct_trials.count() / trials.count() * 100);
       let rt = Math.round(correct_trials.select('rt').mean());
-      return "<style>.context{color:black; font-size: 30px;}</style>\
+      return "<style>.context{color:white; font-size: 30px;}</style>\
                             <div><p class='context'>你正确回答了" + accuracy + "% 的试次。</p>" +
         "<p class='context'>你的平均反应时为" + rt + "毫秒。</p>";
     }
@@ -425,7 +426,7 @@
       });
       let accuracy = Math.round(correct_trials.count() / trials.count() * 100);
       let rt = Math.round(correct_trials.select('rt').mean());
-      return "<style>.context{color:black; font-size: 30px;}</style>\
+      return "<style>.context{color:white; font-size: 30px;}</style>\
                             <div><p class='context'>你正确回答了" + accuracy + "% 的试次。</p>" +
         "<p class='context'>你的平均反应时为" + rt + "毫秒。</p>" +
         "<p class='context'>恭喜你完成练习。按任意键进入正式实验。</p></div>";
@@ -442,15 +443,16 @@
     timeline: [
       {
         type: 'psychophysics',
-        background_color: "white",
+        background_color: "grey",
         stimuli: [
           {
             obj_type: 'cross', // fixation
             startX: "center", // location of the cross's center in the canvas
             startY: "center",
-            line_length: 30 * scale, // pixels
+            line_length: 62.5 * scale, // pixels 视角：0.8° x 0.8°
+
             line_width: 5 * scale,
-            line_color: 'black', // You can use the HTML color name instead of the HEX color.
+            line_color: 'white', // You can use the HTML color name instead of the HEX color.
             show_start_time: 500,
             show_end_time: 1000
           },
@@ -458,24 +460,25 @@
             obj_type: 'image',
             file: jsPsych.timelineVariable('Image'),
             startX: "center", // location of the cross's center in the canvas
-            startY: (-128 * 0.8 - 50) * scale, //图形和文字距离 与加号等距
+            startY: -165.29 * scale, //图形和文字距离 与加号等距
             font: (50).toString() + "px 'Arial'",
-            text_color: 'black',
+            text_color: 'white',
             show_start_time: 1000, // ms after the start of the trial
             show_end_time: 1100,
-            scale: 0.8 * scale, // 调整图片大小
+            scale: 0.6456640625 * scale, // 调整图片大小 视角：3.8° x 3.8°
             origin_center: true
           },
           {
             obj_type: 'text',
             file: jsPsych.timelineVariable("word"),
             startX: "center",
-            startY: 100 * scale, //图形和文字距离 与加号等距
+            startY: 165.29 * scale, //图形和文字距离 与加号等距
             content: function () {
               return jsPsych.timelineVariable("word", true);
             },
-            font: `${30 * scale}px 'Arial'`, //字体和颜色设置
-            text_color: 'black',
+            font: `${69.58 * scale}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+
+            text_color: 'white',
             show_start_time: 1000, // ms after the start of the trial
             show_end_time: 1100,
             origin_center: true
@@ -545,7 +548,7 @@
       });
       let accuracy = Math.round(correct_trials.count() / trials.count() * 100);
       let rt = Math.round(correct_trials.select('rt').mean());
-      return "<style>.context{color:black; font-size: 30px;}</style>\
+      return "<style>.context{color:white; font-size: 30px;}</style>\
                             <div><p class='context'>你正确回答了" + accuracy + "% 的试次。</p>" +
         "<p class='context'>你的平均反应时为" + rt + "毫秒。</p>" +
         "<p class='context'>请按任意键进入休息</p></div>";
@@ -619,17 +622,6 @@
       jsPsych.data.get().localSave("csv", "data_v1.csv"); //原始数据读取和保存
     }
   });
-  //取出需要数据：let data = jsPsych.data.get().filter({ save: true }).addToAll(info).filterColumns((function () {
-            // let a = jsPsych.data.get().filter({ save: true }).uniqueNames();
-            // p.forEach(v => {
-            //     a.splice(a.indexOf(v), 1);
-            // });
-            // return ["subj_idx", "Name", "Sex", "BirthYear", "Education", "PhoneNumber", "shapeFileName", "shape",
-                //"shapeEn", "shapeName", "shapeNameEn", "characterName", "characterNameEn", "misNum", "correctResp", "subjResp", "series", "condition",
-                //"blockNum", "blockType", "trialNum", "response", "acc", "rt", "time_elapsed"];
-       // })());
-
-       //取出数据的想法：在原始代码中filter出基本信息列，所有的psychophysics，对应response，acc
 </script>
 
 </html>
