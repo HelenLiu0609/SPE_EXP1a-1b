@@ -23,7 +23,7 @@ Note
 ---
 While you are running the experiment...
 
-- Remember to ask the participants to send the raw csv file to you directly. Do not open the raw csv and modify anything. Otherwise,reading errors may occur.  
+- Remember to ask the participants to send the raw csv file to you directly. Just directly put all the raw datasets in a file and read them in R. __Do not open the raw csv and modify anything.__ Otherwise,reading errors may occur.  
 
 If you want to run the experiment remotely（eg., from your local terminal):
 
