@@ -37,7 +37,6 @@
     /* 目前待解决问题 */
     //是否需要统一几点评分？
     // likert_trial_self_measurement 项目确认
-    //csv存储data标准化格式
 
     /* create timeline */
     var timeline = [];
@@ -72,7 +71,7 @@
    <p>本问卷大约需要xx分钟。共分为4个部分:</p>
    <p>在第一个部分需要您填写一些基本个人信息及家庭信息。</p>
    <p>在第二个部分需要您回答一些新冠疫情防控对您个人的影响的相关问题。</p>
-   <p>在第三个部分需要您回答一些政府对于新冠疫情防控对您的影响的相关问问题。</p>
+   <p>在第三个部分需要您回答一些政府对于新冠疫情防控对您的影响的相关问题。</p>
    <p>在第四个部分需要您回答一些新冠疫情防控对家庭的影响的相关问题。</p>
    <p>您在本问卷中回答的所有的个人信息和内容将被严格保密。</p>
    <p>本问卷答案没有正确与错误之分，请您基于真实情况作答。</p>
@@ -345,7 +344,7 @@
     timeline.push(instruction_fear_covid_19);
 
     var scale = ["非常不符合", "不符合", "不确定", "符合", "非常符合"];
-
+    //出现问题：继续按钮显示不出来，可改：任意键到下一页
     var likert_trial = { //记分：1-5.A total score is calculated by adding up each item score (ranging from 7 to 35
         type: 'survey-likert',
         questions: [
@@ -420,7 +419,7 @@
     var covid_government_self_1 = [
         {
             type: "html-button-response",
-            stimulus: "<p style = 'color : white'>您是否有在酒店或其他隔离点隔离的经历吗？</p>",
+            stimulus: "<p style = 'color : white'>您是否有在酒店或其他隔离点隔离的经历？</p>",
             choices: ['是', '否'],
             on_finish: function (data) { }
         }, {
@@ -430,12 +429,12 @@
             on_finish: function (data) { }
         }, {
             type: "html-button-response",
-            stimulus: "<p style = 'color : white'>您所在地区是否采取发放口罩、酒精和消毒液等防疫工具？</p>",
+            stimulus: "<p style = 'color : white'>您所在地区是否发放口罩、酒精和消毒液等防疫工具？</p>",
             choices: ['是', '否'],
             on_finish: function (data) { }
         }, {
             type: "html-button-response",
-            stimulus: "<p style = 'color : white'>您所在地区是否进行社区疫情防控知识宣传的疫情防控措施？</p>",
+            stimulus: "<p style = 'color : white'>您所在地区是否采取了社区疫情防控知识宣传的疫情防控措施？</p>",
             choices: ['是', '否'],
             on_finish: function (data) { }
         }, {
@@ -633,7 +632,7 @@
    `,
         choices: jsPsych.ALL_KEYS,
     };
-    timeline.push(nstruction_covid_information_family_2);
+    timeline.push(instruction_covid_information_family_2);
 
     var scale = ["非常不同意", "比较不同意", "有些不同意", "不清楚", "有些同意", "比较同意", "非常同意"];
 
@@ -715,7 +714,7 @@
     jsPsych.init({
         timeline: timeline,
         on_finish: function () {
-            jsPsych.data.get().localSave("csv", "data_v1.csv"); //原始数据读取和保存
+            jsPsych.data.get().localSave("csv", "survey_data_exp1.csv"); //原始数据读取和保存
         }
     });
 </script>
