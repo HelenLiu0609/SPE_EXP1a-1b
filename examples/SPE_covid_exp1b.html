@@ -36,6 +36,8 @@
 
   /* 目前待解决问题 */
   //储存被试机器信息
+  //ID 自动化
+  //1500ms内做反应
 
   /* 根据自己的实验，需要进行的修改地方 check list */
   //1.头部：images和texts那里，实验用到的图片，文字。按键那里，实验用到的按键。 
@@ -130,11 +132,11 @@
     preamble: "<p style =' color : white'>你的实验编号是</p>",
     html: function () {
       let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["Name"] : "";
-      return "<p><input name='Q0' type='text' value='" + data + "' required/></p>";
+      return "<p><input ID='Q0' type='text' value='" + data + "' required/></p>";
     },
     button_label: "继续",
     on_finish: function (data) {
-      info["Name"] = data.response.Q0;
+      info["ID"] = data.response.Q0;
     }
   }, {
     type: "html-button-response",
@@ -201,12 +203,12 @@
     type: "instructions",
     pages: ['<p>实验说明：</p><p>您好，欢迎参加本次实验。本次实验大约需要20分钟完成。</p>',
       '<p>任务概况：</p><p>本次实验您需要完成知觉匹配任务。</p><p>您将学习以下几种几何图形与不同标签的对应关系。</p>',
-      '<p>具体来说，在实验中，您需要注视电脑屏幕的中央及屏幕上出现的视觉内容。</p><p>屏幕上首先出现一个“+”，很快，“+”上方面会出现一个几何图形中，下方会出现文字信息。</p>',
+      '<p>具体来说，在实验中，您需要注视电脑屏幕的中央及屏幕上出现的视觉内容。</p><p>屏幕上首先出现一个“+”，很快，“+”上方会出现一个几何图形，下方会出现文字信息。</p>',
       '<p>接下来请您努力记下如下图形与文字的对应关系</p>',
       '<img src="img/Tri.png"></img>' + '<p>新冠</p>',
       '<img src="img/Cir.png"></img>' + '<p>流感</p>',
       '<img src="img/Squ.png"></img>' + '<p>细胞</p>',
-      '<p>您的任务是判断几何图形与图形名称或文字标签是否匹配：</p><p>当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
+      '<p>您的任务是判断几何图形与图形名称或文字标签是否匹配：</p><p>当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p><p>请您在实验过程中，将两个手指放到相应的键盘位上</p>',
       '<p>完成匹配任务的练习之后，您将完成6组匹配任务，每组包括72次按键反应，每组完成后会有休息。</p><p>完成一组任务大约需要3分钟，整个实验将持续大约20分钟。</p>',
       '<p>如果对本实验还有不清楚之处，请立即向实验员咨询。</p>',
       '<p> 如果你明白了规则，请点击继续，开始匹配任务的练习。</p>',
@@ -363,7 +365,7 @@
       '<img src="img/Tri.png"></img>' + '<p>新冠</p>',
       '<img src="img/Cir.png"></img>' + '<p>流感</p>',
       '<img src="img/Squ.png"></img>' + '<p>细胞</p>',
-      '<p>当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p>',
+      '<p>当出现的图形与下方的名称一致时请按<strong>“f”</strong>键，否则按<strong>“j”</strong>键。</p><p>请您在实验过程中，将两个手指放到相应的键盘位上</p>',
       '<p> 如果你明白了规则，请按任意键继续练习。</p>',
     ],
     show_clickable_nav: true,
@@ -450,7 +452,6 @@
             startX: "center", // location of the cross's center in the canvas
             startY: "center",
             line_length: 62.5 * scale, // pixels 视角：0.8° x 0.8°
-
             line_width: 5 * scale,
             line_color: 'white', // You can use the HTML color name instead of the HEX color.
             show_start_time: 500,
@@ -591,7 +592,7 @@
   var finish = {
     type: "html-keyboard-response",
     stimulus: `
-    <p>感谢您参加我们的实验，请按任意键下载cvs，并将下载好的csv发送给研究者。</p>
+    <p>感谢您参加我们的实验，请按任意键下载csv，并将下载好的csv发送给研究者。</p>
     <p>请你手动通过 ESC 键退出全屏后关闭本页面。再次感谢您参与本实验！</p>`
   };
   timeline.push(finish);
@@ -622,6 +623,7 @@
       jsPsych.data.get().localSave("csv", "data_v1.csv"); //原始数据读取和保存
     }
   });
+  //优化：自动储存文件格式： 名称： "rawdata_${(ID).toString()}_1a.csv"
 </script>
 
 </html>
