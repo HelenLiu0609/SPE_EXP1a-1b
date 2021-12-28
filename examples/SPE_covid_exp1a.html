@@ -130,7 +130,7 @@
     preamble: "<p style =' color : white'>你的实验编号是</p>",
     html: function () {
       let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["Name"] : "";
-      return "<p><input ID='Q0' type='text' value='" + data + "' required/></p>";
+      return "<p><input name='Q0' type='text' value='" + data + "' required/></p>";
     },
     button_label: "继续",
     on_finish: function (data) {
@@ -528,7 +528,7 @@
     //define number of bins below
     sample: {
       type: 'fixed-repetitions',
-      size: 1, // 6 repetitions of each trial
+      size: 6, // 6 repetitions of each trial
     },
     on_finish: function () {
       $("body").css("cursor", "default"); //鼠标出现
@@ -584,7 +584,7 @@
   /* define blocks */
   var repeatblock = {
     timeline: [formal, feedback_block, rest],
-    repetitions: 1  // 这里注意：填入需要重复几个block数 - 1
+    repetitions: 2  // 这里注意：填入需要重复几个block数 - 1
   };
   timeline.push(repeatblock);
 
