@@ -37,7 +37,6 @@
   /* 目前待解决问题 */
   //储存被试机器信息
   //ID 自动化
-  //1500ms内做反应
 
   /* 根据自己的实验，需要进行的修改地方 check list */
   //1.头部：images和texts那里，实验用到的图片，文字。按键那里，实验用到的按键。 
@@ -487,6 +486,7 @@
         ],
         choices: ['f', 'j'], // The participant can respond to the stimuli using the 'f' or 'j' key.
         response_start_time: 1000, // 被试可以开始反应时间
+        trial_duration: 2500, //可反应窗口为1500ms
         //canvas_height: 500, // 如果下方需要提示按键
         //prompt: '一致时请按f键，否则按j键.',
         data: jsPsych.timelineVariable("identify"),
