@@ -40,7 +40,7 @@
 
     /* create timeline */
     var timeline = [];
-
+    let info = {};
     // 进入全屏 
     var fullscreen_trial = {
         type: 'fullscreen',
@@ -156,9 +156,21 @@
     }, {//家庭社会经济地位：在编码时对这些选择分别赋予 1~ 6 的分值。 
         //最后, 把职业等级和受教育程度所得的值加起来, 总分作为家庭 SES 的指标值, 其分布范围在 4~ 22 之间
         type: "survey-html-form",
-        preamble: "<p style =' color : white'>您父亲的职业是</p>",
-        html: "<p><input father ='Q0' type='text' value='' required/></p>",
-        button_label: "继续",
+        preamble: "<p style = 'color : white'>您父亲的教育经历是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>没有上过学</option>
+                <option value=2>小学</option>
+                <option value=3>初中</option>
+                <option value=4>高中或中专</option>
+                <option value=5>大学（专科或本科</option>
+                <option value=6>研究生及以上</option>
+                </select></p>`
+        },
+        on_load: function () {
+        },
+        button_label: '继续',
         on_finish: function (data) {
 
         }
@@ -173,30 +185,7 @@
                 <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
 售货员、司机等;</option>
                 <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
-                <option value=5>大学</option>
-                <option value=6>硕士</option>
-                <option value=7>博士</option>
-                <option value=8>其他</option>
-                </select></p>`
-        },
-        on_load: function () {
-        },
-        button_label: '继续',
-        on_finish: function (data) {
-
-        }
-    }, {
-        type: "survey-html-form",
-        preamble: "<p style = 'color : white'>您父亲的教育经历是</p>",
-        html: function () {
-            return `
-                <p><select name="Q0" size=10>
-                <option value=1>没有上过学</option>
-                <option value=2>小学</option>
-                <option value=3>初中</option>
-                <option value=4>高中或中专</option>
-                <option value=5>大学（专科或本科</option>
-                <option value=6>研究生及以上</option>
+                <option value=5>职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。</option>
                 </select></p>`
         },
         on_load: function () {
@@ -220,10 +209,30 @@
                 </select></p>`
         },
         on_load: function () {
-
         },
         button_label: '继续',
         on_finish: function (data) {
+
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style = 'color : white'>您母亲的职业是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民</option>
+                <option value=2>体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;</option>
+                <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
+售货员、司机等;</option>
+                <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
+                <option value=5>职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。</option>
+                </select></p>`
+        },
+        on_load: function () {
+        },
+        button_label: '继续',
+        on_finish: function (data) {
+
         }
     }, {//社会阶级
         type: "instructions",
@@ -246,7 +255,6 @@
     timeline.push({
         timeline: basic_information,
     });
-
 
     // 新冠疫情防控对个人的影响
     // 心理健康自评问卷（Self-reporting questionnaires 20）
