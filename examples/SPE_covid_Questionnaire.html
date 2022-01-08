@@ -103,26 +103,14 @@
         // 实验被试基本信息收集
         //基本信息（性别、年龄、家庭背景/SES、当前居住地、联系方式）
         type: "survey-html-form",
-        preamble: "<p style =' color : white'>你的名字是</p>",
-        html: "<p><input name='Q0' type='text' value='' required/></p>",
+        preamble: "<p style =' color : white'>你的实验编号是</p>",
+        html: function () {
+            let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["Name"] : "";
+            return "<p><input name='Q0' type='text' value='" + data + "' required/></p>";
+        },
         button_label: "继续",
         on_finish: function (data) {
-        }
-    }, {
-        type: "html-button-response",
-        stimulus: "<p style = 'color : white'>你的性别</p>",
-        choices: ['男', '女', '其他'],
-        on_finish: function (data) {
-        }
-    }, {
-        type: "survey-html-form",
-        preamble: "<p style = 'color : white'>你的出生年</p>",
-        html: `<p>
-        <input name="Q0" type="number" placeholder="1900~2020" min=1900 max=2020 oninput="if(value.length>4) value=value.slice(0,4)" required />
-        </p>`,
-        button_label: '继续',
-        on_finish: function (data) {
-
+            info["ID"] = data.response.Q0;
         }
     }, {
         type: "html-button-response",
@@ -165,7 +153,8 @@
         on_finish: function (data) {
 
         }
-    }, {
+    }, {//家庭社会经济地位：在编码时对这些选择分别赋予 1~ 6 的分值。 
+        //最后, 把职业等级和受教育程度所得的值加起来, 总分作为家庭 SES 的指标值, 其分布范围在 4~ 22 之间
         type: "survey-html-form",
         preamble: "<p style =' color : white'>您父亲的职业是</p>",
         html: "<p><input father ='Q0' type='text' value='' required/></p>",
@@ -175,9 +164,24 @@
         }
     }, {
         type: "survey-html-form",
-        preamble: "<p style =' color : white'>您母亲的职业是</p>",
-        html: "<p><input mother ='Q0' type='text' value='' required/></p>",
-        button_label: "继续",
+        preamble: "<p style = 'color : white'>您父亲的职业是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民</option>
+                <option value=2>体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;</option>
+                <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
+售货员、司机等;</option>
+                <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
+                <option value=5>大学</option>
+                <option value=6>硕士</option>
+                <option value=7>博士</option>
+                <option value=8>其他</option>
+                </select></p>`
+        },
+        on_load: function () {
+        },
+        button_label: '继续',
         on_finish: function (data) {
 
         }
@@ -187,14 +191,12 @@
         html: function () {
             return `
                 <p><select name="Q0" size=10>
-                <option value=1>小学以下</option>
+                <option value=1>没有上过学</option>
                 <option value=2>小学</option>
                 <option value=3>初中</option>
-                <option value=4>高中</option>
-                <option value=5>大学</option>
-                <option value=6>硕士</option>
-                <option value=7>博士</option>
-                <option value=8>其他</option>
+                <option value=4>高中或中专</option>
+                <option value=5>大学（专科或本科</option>
+                <option value=6>研究生及以上</option>
                 </select></p>`
         },
         on_load: function () {
@@ -209,14 +211,12 @@
         html: function () {
             return `
                 <p><select name="Q0" size=10>
-                <option value=1>小学以下</option>
+                <option value=1>没有上过学</option>
                 <option value=2>小学</option>
                 <option value=3>初中</option>
-                <option value=4>高中</option>
-                <option value=5>大学</option>
-                <option value=6>硕士</option>
-                <option value=7>博士</option>
-                <option value=8>其他</option>
+                <option value=4>高中或中专</option>
+                <option value=5>大学（专科或本科</option>
+                <option value=6>研究生及以上</option>
                 </select></p>`
         },
         on_load: function () {
@@ -227,17 +227,17 @@
         }
     }, {//社会阶级
         type: "instructions",
-        pages: ['<img src="img/social.png"></img>' + '<p>请您想象一下这个梯子代表了中国不同的家庭所处的不同的社会阶层。</p><p>等级越高，表示其所处的阶层地位越高。</p>',
-            '<p>例如，01 代表社会最底层，来自这些家庭的人其生活境况是最糟糕的，教育水平最低、工作最不体面、收入最低下。</p>',
-            '<p>10 代表社会最高层，来自这些家庭的人其生活境况是最优裕的，他们受教育程度高、工作最体面、收入最高。</p>',
+        pages: ['<img src="img/social.png"></img>' + '<p>想像一下，下图的梯子代表了你所在社会的层级结构。</p><p>等级越高，表示其所处的阶层地位越高。</p>',
+            '<p>例如，01 梯子底端代表社会的最底层——他们拥有最少的财富、很少甚至没有受过教育、没有工作或者从事着他人不愿意/不尊重的工作。</p>',
+            '<p>10 梯子顶端代表社会的最上层——他们拥有最多的财富、最好的教育和最爱尊重的职业；</p>',
         ],
         show_clickable_nav: true,
         show_page_number: true,
         button_label_previous: '返回',
         button_label_next: '继续',
-    }, {//社会阶级
+    }, {
         type: "survey-html-form",
-        preamble: "<p style =' color : white'>请结合您的状况，思考一下您觉得自己出身的家庭位于梯子的哪一级？(1-10)</p>",
+        preamble: "<p style =' color : white'>现在，想想你自己的家庭。请告诉我们，你认为你自己的家庭处在这个梯子的哪个位置？请写下您认为最能代表您家庭在这个梯子上位置的数字。(1-10)</p>",
         html: "<p><input level='Q0' type='text' value='' required/></p>",
         button_label: "继续",
         on_finish: function (data) { }
@@ -249,84 +249,125 @@
 
 
     // 新冠疫情防控对个人的影响
-    // 12项一般健康问卷 GHQ_12
-    var instruction_GHQ_12 = {
+    // 心理健康自评问卷（Self-reporting questionnaires 20）
+    //该量表共20个条目，每个条目按照2点计分法，评分标准为：“是”计1分，“否”计0分。以8分为界值，＜8分为无明显应激反应，≥8分为存在应激反应
+    var instruction_SRQ_20 = {
         type: "html-keyboard-response",
         stimulus: `
-   <p>接下来的几个问题，我们将了解您最近几周内的身体健康状况。</p>
-   <p>这里的问题是针对从2-3周前到现在的状况。</p>
-   <p>在以下问题中，请选择最适当的一栏。</p>
-   <p>请您回答所有的问题。</p>
+   <p>接下来的几个问题，我们将了解您最近30内的身体健康状况。</p>
+   <p>如果您觉得问题适合您的情况，并在过去30天内存在，请回答“是”。</p>
+   <p>另一方面，如果问题不适合您的情况或在30天内不存在，请回答“否”。</p>
+   <p>本问卷实行匿名制，所有数据只用于统计分析，对有关您的信息保密。请您回答所有的问题。</p>
    <p>按任意键至下页。</p>
    `,
         choices: jsPsych.ALL_KEYS,
     };
-    timeline.push(instruction_GHQ_12);
+    timeline.push(instruction_SRQ_20);
 
-    var covid_information_self_GHQ_12 = [{ //12项一般健康问卷//回答前两项者计0分，回答后两项者计1分，总分范围为0-12分，3分为切分值。
+    var SRQ_20 = [{ //心理健康自评问卷//回答前两项者计0分，回答后两项者计1分，总分范围为0-12分，3分为切分值。
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>在做日常的事情的时候，您能集中精神吗？</p>",
-        choices: ['能集中', '和平时一样', '不能集中', '完全不能'],
+        stimulus: "<p style = 'color : white'>您是否经常头疼？ </p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>有由于过分担心而失眠的情况吗？</p>",
-        choices: ['没有过', '和平时一样', '有过', '总这样'],
+        stimulus: "<p style = 'color : white'>您是否食欲差？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您觉得自己是有用的人吗？</p>",
-        choices: ['有用', '和平时一样', '没有用', '完全没有用'],
+        stimulus: "<p style = 'color : white'>您是否睡眠差？ </p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您觉得自己有决断力吗？</p>",
-        choices: ['有', '和平时一样', '没有', '完全没有'],
+        stimulus: "<p style = 'color : white'>您是否易受惊吓？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您总是处于紧张状态吗</p>",
-        choices: ['不紧张', '和平时一样', '紧张', '非常紧张'],
+        stimulus: "<p style = 'color : white'>您是否手抖？ </p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您觉得自己不能解决问题吗？</p>",
-        choices: ['能', '和平时一样', '不能', '完全不能'],
+        stimulus: "<p style = 'color : white'>您是否感觉不安、紧张或担忧？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您能享受日常活动吗？</p>",
-        choices: ['能', '和平时一样', '不能', '完全不能'],
+        stimulus: "<p style = 'color : white'>您是否消化不良？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您能够面对你所面临的问题吗？</p>",
-        choices: ['能', '和平时一样', '不能', '完全不能'],
+        stimulus: "<p style = 'color : white'>您是否思维不清晰？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您感到痛苦、忧虑吗？</p>",
-        choices: ['不觉得', '和平时一样', '觉得', '总是觉得'],
+        stimulus: "<p style = 'color : white'>您是否感觉不快？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您失去自信了吗？</p>",
-        choices: ['没有', '和平时一样', '失去', '完全失去'],
+        stimulus: "<p style = 'color : white'>您是否比原来哭的多？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您觉得自己是没有价值的人吗？</p>",
-        choices: ['没有觉得', '和平时一样', '觉得', '总是觉得'],
+        stimulus: "<p style = 'color : white'>您是否发现很难从日常生活中得到乐趣？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您觉得所有的事情都顺利吗？</p>",
-        choices: ['顺利', '和平时一样', '不顺利', '完全不顺利'],
+        stimulus: "<p style = 'color : white'>您是否发现自己很难做决定？</p>",
+        choices: ['是', '否'],
         on_finish: function (data) { }
-    },
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>日常工作是否令您感到痛苦？ </p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您在生活中是否觉得自己不能起到应起的作用？</p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您是否丧失了对事物的乐趣？</p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您是否感到自己是个无价值的人?</p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您头脑中是否出现过结束自己生命的想法?</p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您是否做什么都感到累？</p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您是否感到胃部不适？</p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style = 'color : white'>您是否容易疲劳？ </p>",
+        choices: ['是', '否'],
+        on_finish: function (data) { }
+    }
     ];
     timeline.push({
-        timeline: covid_information_self_GHQ_12,
+        timeline: SRQ_20,
     });
 
     // Chinese Version of the Fear of COVID-19 Scale
@@ -345,7 +386,7 @@
 
     var scale = ["非常不符合", "不符合", "不确定", "符合", "非常符合"];
     //出现问题：继续按钮显示不出来，可改：任意键到下一页
-    var likert_trial = { //记分：1-5.A total score is calculated by adding up each item score (ranging from 7 to 35
+    var likert_trial = { //记分：1-5.A total score is calculated by adding up each item score (ranging from 7 to 35）
         type: 'survey-likert',
         questions: [
             { prompt: "我极其害怕新冠肺炎。", labels: scale, required: true },
@@ -372,7 +413,7 @@
         stimulus: `
    <p>针对目前我国发生的新型冠状病毒感染的肺炎病例，</p>
    <p>为了了解您对相关健康知识的需求，以更好地开展疾病防控，</p>
-   <p>现邀请您参加本次调查，请您对下列问题进行1-7点评分（1=非常不同意，4=不清楚，7=非常同意）。</p>
+   <p>现邀请您参加本次调查，请您对下列问题进行1-5点评分（5=总是 ，4=大部分时间是，3=有时是，2=偶尔，1=从来没有）。</p>
    <p>请您回答所有的问题。</p>
    <p>按任意键至下页。</p>
    `,
@@ -380,7 +421,7 @@
     };
     timeline.push(instruction_covid_information_self_measurement);
 
-    var scale_2 = ["非常不同意", "比较不同意", "有些不同意", "不清楚", "有些同意", "比较同意", "非常同意"];
+    var scale_2 = ["从来没有", "偶尔", "有时是", "大部分时间是", "总是"];//记分：1-5分，得分越高表示个人防护越高
     var likert_trial_1 = {
         type: 'survey-likert',
         questions: [
@@ -405,9 +446,8 @@
     // 政府对于新冠疫情防控对您的影响
 
     //问卷1:
-    //每一陈述都有“是”、“否”两种回答，分别记为-1、1，
-    //每个被调查者的分数就是各道题回答所得分数的加总，
-    //总分越低说明政府的防疫举措越充分，疫情防控对人们的影响越大。
+    //每一陈述都有“是”、“否”两种回答，分别记为1、0，
+    //每个被调查者的分数就是各道题回答所得分数的加总，总分越高说明政府的防疫举措越充分，疫情防控对人们的影响越大。
     var instruction_covid_government_self_1 = {
         type: "html-keyboard-response",
         stimulus: `
@@ -676,9 +716,9 @@
     });
 
     //新冠对个人的影响
-    timeline.push(instruction_GHQ_12),
+    timeline.push(instruction_SRQ_20),
         timeline.push({
-            timeline: covid_information_self_GHQ_12 //12项一般健康问卷 GHQ_12
+            timeline: SRQ_20 //WHO心理健康自评问卷（Self-reporting questionnaires 20）
 
         });
     timeline.push(instruction_fear_covid_19),
@@ -714,7 +754,7 @@
     jsPsych.init({
         timeline: timeline,
         on_finish: function () {
-            jsPsych.data.get().localSave("csv", "survey_data_exp1.csv"); //原始数据读取和保存
+            jsPsych.data.get().addToAll(info).localSave("csv", `rawdata_${info["ID"]}_survey_exp1.csv`); //原始数据读取和保存
         }
     });
 </script>

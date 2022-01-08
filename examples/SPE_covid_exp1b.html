@@ -21,7 +21,7 @@
 
   <head>
     <style>
-     body {
+      body {
         background-color: rgb(128, 128, 128);
         color: white;
       }
@@ -620,7 +620,7 @@
   jsPsych.init({
     timeline: timeline,
     on_finish: function () {
-      jsPsych.data.get().localSave("csv", "data_v1.csv"); //原始数据读取和保存
+      jsPsych.data.get().addToAll(info).localSave("csv", `rawdata_${info["ID"]}_1b.csv`); //原始数据读取和保存
     }
   });
   //优化：自动储存文件格式： 名称： "rawdata_${(ID).toString()}_1a.csv"
