@@ -562,6 +562,7 @@
 
   /* define rest between blocks 休息 */
   // rest 休息：加一个keyboard response 空屏呈现文字
+  let blockTotalNum = 2; // 此处填入总block数量-1，比如总数量是3，那么值就需要是2
   let rest = {
     type: 'html-button-response',
     stimulus: function () {
@@ -569,14 +570,15 @@
         [{ correct: true }, { correct: false }]
       );
       return `
+      <p>你当前还剩余${blockTotalNum}组实验</p>
     <p font-size: 48px; font-weight: bold;">现在是休息时间。</p>
     <p>当你结束休息后，你可以点击 “结束休息” 按钮继续实验。</p>`
-      // 想优化提示被试还剩几组实验：<p>你当前还剩余${12 - blockNum}组实验</p>  blockNum 定义
     },
     choices: ["结束休息"],
     trial_duration: 60000,
     on_finish: function () {
       $("body").css("cursor", "none"); //鼠标消失
+      blockTotalNum -= 1;
     }
   }
   timeline.push(rest);

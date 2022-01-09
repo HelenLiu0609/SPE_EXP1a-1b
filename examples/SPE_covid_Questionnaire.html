@@ -116,14 +116,14 @@
         type: "html-button-response",
         stimulus: "<p style = 'color : white'>您所居住的城市位于</p>",
         choices: ['农村', '城市'],
-        on_finish: function (data) { }
+        on_finish: function (data) {
+        }
     }, {
-        type: "survey-html-form",
-        preamble: "<p style =' color : white'>您所居住的城市是</p>",
-        html: "<p><input city='Q0' type='text' value='' required/></p>",
+        type: "html-button-response",
+        preamble: "<p style =' color : white'>您所居住的城市目前是否存在疫情中高风险区？</p>",
+        choices: ['是', '否'],
         button_label: "继续",
         on_finish: function (data) {
-
         }
     }, {
         type: "survey-html-form",
@@ -406,7 +406,7 @@
             { prompt: "想到感染新冠肺炎，我会心跳加速或心悸。", labels: scale, required: true }
         ],
         randomize_question_order: true, //随机呈现
-        scale_width: 500
+        scale_width: null
     };
 
     timeline.push({
@@ -659,16 +659,36 @@
     ];
     timeline.push(covid_information_family_measurement);
 
-    var multi_choice_block = {
-        type: 'survey-multi-choice',
-        questions: [
-            { prompt: "疫情期间，是否有亲戚曾经感染过新型冠状病毒？", name: '亲戚', options: ["是", "否"], required: true },
-            { prompt: "疫情期间，是否有朋友或同事曾经感染过新型冠状病毒？", name: '朋友或同事', options: ["是", "否"], required: true },
-            { prompt: "疫情期间，是否有自己的社区居民曾经感染过新型冠状病毒？", name: '社区居民', options: ["是", "否"], required: true },
-            { prompt: "您是否有担心过自己感染新型冠状病毒？", name: '自己', options: ["是", "否"], required: true },
-            { prompt: "您是否有担心过自己家人感染新型冠状病毒？", name: '家人', options: ["是", "否"], required: true }
-        ]
-    };
+    var multi_choice_block = [
+        {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>疫情期间，是否有亲戚曾经感染过新型冠状病毒？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>疫情期间，是否有朋友或同事曾经感染过新型冠状病毒？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>疫情期间，是否有自己的社区居民曾经感染过新型冠状病毒？？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您是否有担心过自己感染新型冠状病毒？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        }, {
+            type: "html-button-response",
+            stimulus: "<p style = 'color : white'>您是否有担心过自己家人感染新型冠状病毒？</p>",
+            choices: ['是', '否'],
+            on_finish: function (data) { }
+        },
+    ];
+    timeline.push(multi_choice_block);
+
 
     // 家庭健康、生活调查 Part 2
     var instruction_covid_information_family_2 = {

@@ -36,7 +36,6 @@
 
   /* 目前待解决问题 */
   //储存被试机器信息
-  //ID 自动化
 
   /* 根据自己的实验，需要进行的修改地方 check list */
   //1.头部：images和texts那里，实验用到的图片，文字。按键那里，实验用到的按键。 
@@ -562,6 +561,7 @@
 
   /* define rest between blocks 休息 */
   // rest 休息：加一个keyboard response 空屏呈现文字
+  let blockTotalNum = 5; // 此处填入总block数量-1，比如总数量是6，那么值就需要是5
   let rest = {
     type: 'html-button-response',
     stimulus: function () {
@@ -569,14 +569,15 @@
         [{ correct: true }, { correct: false }]
       );
       return `
+      <p>你当前还剩余${blockTotalNum}组实验</p>
     <p font-size: 48px; font-weight: bold;">现在是休息时间。</p>
     <p>当你结束休息后，你可以点击 “结束休息” 按钮继续实验。</p>`
-      // 想优化提示被试还剩几组实验：<p>你当前还剩余${12 - blockNum}组实验</p>  blockNum 定义
     },
     choices: ["结束休息"],
     trial_duration: 60000,
     on_finish: function () {
       $("body").css("cursor", "none"); //鼠标消失
+      blockTotalNum -= 1;
     }
   }
   timeline.push(rest);
