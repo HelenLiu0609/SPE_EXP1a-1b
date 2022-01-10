@@ -35,12 +35,20 @@
     /* 写在前面 */
 
     /* 目前待解决问题 */
-    //是否需要统一几点评分？
-    // likert_trial_self_measurement 项目确认
 
     /* create timeline */
     var timeline = [];
     let info = {};
+    //实验用到的图片，文字，设定参数都放这里
+    const images = [ // All the images used in here 图片
+        './img/social.png',
+    ];
+    // Preloading 预加载图片
+    const preload = {
+        type: 'preload',
+        images: images,
+    }
+    timeline.push(preload);
     // 进入全屏 
     var fullscreen_trial = {
         type: 'fullscreen',
@@ -321,7 +329,7 @@
     };
     timeline.push(instruction_SRQ_20);
 
-    var SRQ_20 = [{ //心理健康自评问卷//回答前两项者计0分，回答后两项者计1分，总分范围为0-12分，3分为切分值。
+    var SRQ_20 = [{
         type: "html-button-response",
         stimulus: "<p style = 'color : white'>您是否经常头疼？ </p>",
         choices: ['是', '否'],
