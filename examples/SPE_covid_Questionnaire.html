@@ -68,7 +68,7 @@
     var instruction_information = {
         type: "html-keyboard-response",
         stimulus: `
-   <p>本问卷大约需要xx分钟。共分为4个部分:</p>
+   <p>本问卷大约需要20分钟。共分为4个部分:</p>
    <p>在第一个部分需要您填写一些基本个人信息及家庭信息。</p>
    <p>在第二个部分需要您回答一些新冠疫情防控对您个人的影响的相关问题。</p>
    <p>在第三个部分需要您回答一些政府对于新冠疫情防控对您的影响的相关问题。</p>
@@ -114,24 +114,56 @@
         }
     }, {
         type: "html-button-response",
-        stimulus: "<p style = 'color : white'>您所居住的城市位于</p>",
-        choices: ['农村', '城市'],
+        stimulus: "<p style = 'color : white'>你的性别</p>",
+        choices: ['男', '女', '其他'],
         on_finish: function (data) {
+            info["Sex"] = data.response == 0 ? "Male" : (data.response == 1 ? "Female" : "Other")
+        }
+    }, {
+        type: "survey-html-form",
+        preamble: "<p style = 'color : white'>你的出生年</p>",
+        html: function () {
+            let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["BirthYear"] : "";
+            return `<p>
+        <input name="Q0" type="number" value=${data} placeholder="1900~2020" min=1900 max=2020 oninput="if(value.length>4) value=value.slice(0,4)" required />
+        </p>`
+        },
+        button_label: '继续',
+        on_finish: function (data) {
+            info["BirthYear"] = data.response.Q0;
         }
     }, {
         type: "html-button-response",
-        preamble: "<p style =' color : white'>您所居住的城市目前是否存在疫情中高风险区？</p>",
+        stimulus: "<p style = 'color : white'>您所居住的城市位于</p>",
+        choices: ['农村', '城市'],
+        on_finish: function (data) {
+            info["City"] = data.response == 0 ? "Rural" : "Urban"
+        }
+    }, {
+        type: "html-button-response",
+        stimulus: "<p style =' color : white'>您所居住的城市目前是否存在疫情中高风险区？</p>",
         choices: ['是', '否'],
         button_label: "继续",
         on_finish: function (data) {
         }
     }, {
         type: "survey-html-form",
-        preamble: "<p style =' color : white'>您的职业是</p>",
-        html: "<p><input occupation='Q0' type='text' value='' required/></p>",
-        button_label: "继续",
+        preamble: "<p style = 'color : white'>您的职业是</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民</option>
+                <option value=2>体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;</option>
+                <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
+售货员、司机等;</option>
+                <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
+                <option value=5>职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。</option>
+                </select></p>`
+        },
+        on_load: function () {
+        },
+        button_label: '继续',
         on_finish: function (data) {
-
         }
     }, {
         type: "survey-html-form",
@@ -246,11 +278,27 @@
         button_label_next: '继续',
     }, {
         type: "survey-html-form",
-        preamble: "<p style =' color : white'>现在，想想你自己的家庭。请告诉我们，你认为你自己的家庭处在这个梯子的哪个位置？请写下您认为最能代表您家庭在这个梯子上位置的数字。(1-10)</p>",
-        html: "<p><input level='Q0' type='text' value='' required/></p>",
-        button_label: "继续",
+        preamble: "<p style = 'color : white'>现在，想想你自己的家庭。请告诉我们，你认为你自己的家庭处在这个梯子的哪个位置？请选出您认为最能代表您家庭在这个梯子上位置的数字。</p>",
+        html: function () {
+            return `
+                <p><select name="Q0" size=10>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+                </select></p>`
+        },
+        on_load: function () {
+        },
+        button_label: '继续',
         on_finish: function (data) { }
-    },
+    }
     ];
     timeline.push({
         timeline: basic_information,
@@ -770,8 +818,10 @@
     timeline.push({
         timeline: covid_information_family_measurement
     });
-    timeline.push(multi_choice_block),//家庭健康、生活调查 Part 1
-        timeline.push(instruction_covid_information_family_2),
+    timeline.push({
+        timeline: multi_choice_block
+    });//家庭健康、生活调查 Part 1
+    timeline.push(instruction_covid_information_family_2),
         timeline.push(likert_trial_family), //家庭健康、生活调查 Part 2
 
         //结束语  
