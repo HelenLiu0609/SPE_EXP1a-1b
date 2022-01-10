@@ -145,6 +145,7 @@
         choices: ['是', '否'],
         button_label: "继续",
         on_finish: function (data) {
+            info["City_risk_level"] = data.response == 0 ? "risky" : "non_risky"
         }
     }, {
         type: "survey-html-form",
@@ -426,7 +427,7 @@
         timeline: SRQ_20,
     });
 
-    // Chinese Version of the Fear of COVID-19 Scale
+    // Chinese Version of the Fear of COVID-19 Scale (FCV_19S)
     var instruction_fear_covid_19 = {
         type: "html-keyboard-response",
         stimulus: `
@@ -701,7 +702,7 @@
         {
             type: "html-button-response",
             stimulus: "<p style = 'color : white'>疫情防控期间，您是否进行过短暂隔离</p>",
-            choices: ['7天以内', '7-14天', '14天以上'],
+            choices: ['是', '否'],
             on_finish: function (data) { }
         },
     ];
