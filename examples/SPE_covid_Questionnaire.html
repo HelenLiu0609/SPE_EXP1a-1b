@@ -21,8 +21,7 @@
 
     <head>
         <style>
-            body {
-                background-color: rgb(125, 125, 125);
+            html { background-color: rgb(125, 125, 125);
                 color: white;
             }
         </style>
@@ -463,7 +462,7 @@
             { prompt: "想到感染新冠肺炎，我会心跳加速或心悸。", labels: scale, required: true }
         ],
         randomize_question_order: true, //随机呈现
-        scale_width: null
+        //scale_width: null
     };
 
     timeline.push({
@@ -609,7 +608,7 @@
     var instruction_covid_government_self_2 = {
         type: "html-keyboard-response",
         stimulus: `
-   <p>为了更好地认识和了解抗击疫情对人们生活、经济和健康的影响，我们想了解您所在地区抗击新型冠状病毒期间的相关情况，</p>
+   <p>为了更好地认识和了解抗击疫情对人们生活、经济和健康的影响，我们想了解您所在地区抗击新型冠状病毒期间的相关情况。</p>
    <p>请根据您自己的认知，对下列问题进行1-7点评分（1=非常不同意，4=不清楚，7=非常同意）。</p>
    <p>请您回答所有的问题。</p>
    <p>按任意键至下页。</p>
