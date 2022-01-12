@@ -21,7 +21,8 @@
 
     <head>
         <style>
-            html { background-color: rgb(125, 125, 125);
+            html {
+                background-color: rgb(125, 125, 125);
                 color: white;
             }
         </style>
@@ -152,33 +153,53 @@
         choices: ['是', '否'],
         button_label: "继续",
         on_finish: function (data) {
-            info["City_risk_level"] = data.response == 0 ? "risky" : "non_risky"
+            info["City_risk_level"] = data.response == 0 ? "risky" : "non_risky" //定义储存的data形式
         }
     }, {
-        type: "survey-html-form",
-        preamble: "<p style = 'color : white'>您的职业是</p>",
-        html: function () {
-            return `
-                <p><select name="Q0" size=10>
-                <option value=1>临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民</option>
-                <option value=2>体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;</option>
-                <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
-售货员、司机等;</option>
-                <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
-                <option value=5>职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。</option>
-                </select></p>`
-        },
+        type: 'survey-multi-choice',
+        questions: [
+            {
+                prompt: "您的职业是",
+                name: 'Occupation',
+                options: [
+                    "临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民",
+                    "体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;",
+                    "一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如售货员、司机等;",
+                    "中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; ",
+                    "职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。"
+                ],
+                required: true
+            }
+        ],
         on_load: function () {
+            $(".jspsych-survey-multi-choice-question p").css({
+                "text-align": "center",
+                "font-size": "20px"
+            })
+            $(".jspsych-survey-multi-choice-question div").css({
+                "text-align": "left",
+                "width": "500px",
+                "margin": "10px 0 0 0",
+                "font-size": "15px" //修改选项字体大小
+            })
         },
-        button_label: '继续',
+        button_label: "继续",
         on_finish: function (data) {
+            let cc = {
+                "临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民": "1",
+                "体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;": "2",
+                "一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如售货员、司机等;": "3",
+                "中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; ": "4",
+                "职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。": "5"
+            };
+            data.response.Q0 = cc[data.response.Occupation]
         }
     }, {
         type: "survey-html-form",
         preamble: "<p style = 'color : white'>您的教育经历是</p>",
         html: function () {
             return `
-                <p><select name="Q0" size=10>
+                <p><select name="Q0" size=10 required>
                 <option value=1>小学以下</option>
                 <option value=2>小学</option>
                 <option value=3>初中</option>
@@ -199,7 +220,7 @@
         preamble: "<p style = 'color : white'>您父亲的教育经历是</p>",
         html: function () {
             return `
-                <p><select name="Q0" size=10>
+                <p><select name="Q0" size=10 required>
                 <option value=1>没有上过学</option>
                 <option value=2>小学</option>
                 <option value=3>初中</option>
@@ -215,31 +236,50 @@
 
         }
     }, {
-        type: "survey-html-form",
-        preamble: "<p style = 'color : white'>您父亲的职业是</p>",
-        html: function () {
-            return `
-                <p><select name="Q0" size=10>
-                <option value=1>临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民</option>
-                <option value=2>体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;</option>
-                <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
-售货员、司机等;</option>
-                <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
-                <option value=5>职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。</option>
-                </select></p>`
-        },
+        type: 'survey-multi-choice',
+        questions: [
+            {
+                prompt: "您父亲的职业是",
+                name: 'Occupation',
+                options: [
+                    "临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民",
+                    "体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;",
+                    "一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如售货员、司机等;",
+                    "中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; ",
+                    "职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。"
+                ],
+                required: true
+            }
+        ],
         on_load: function () {
+            $(".jspsych-survey-multi-choice-question p").css({
+                "text-align": "center",
+                "font-size": "20px"
+            })
+            $(".jspsych-survey-multi-choice-question div").css({
+                "text-align": "left",
+                "width": "500px",
+                "margin": "10px 0 0 0",
+                "font-size": "15px"
+            })
         },
-        button_label: '继续',
+        button_label: "继续",
         on_finish: function (data) {
-
+            let cc = {
+                "临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民": "1",
+                "体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;": "2",
+                "一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如售货员、司机等;": "3",
+                "中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; ": "4",
+                "职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。": "5"
+            };
+            data.response.Q0 = cc[data.response.Occupation]
         }
     }, {
         type: "survey-html-form",
         preamble: "<p style = 'color : white'>您母亲的教育经历是</p>",
         html: function () {
             return `
-                <p><select name="Q0" size=10>
+                <p><select name="Q0" size=10 required>
                 <option value=1>没有上过学</option>
                 <option value=2>小学</option>
                 <option value=3>初中</option>
@@ -255,24 +295,43 @@
 
         }
     }, {
-        type: "survey-html-form",
-        preamble: "<p style = 'color : white'>您母亲的职业是</p>",
-        html: function () {
-            return `
-                <p><select name="Q0" size=10>
-                <option value=1>临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民</option>
-                <option value=2>体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;</option>
-                <option value=3>一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如
-售货员、司机等;</option>
-                <option value=4>中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; </option>
-                <option value=5>职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。</option>
-                </select></p>`
-        },
+        type: 'survey-multi-choice',
+        questions: [
+            {
+                prompt: "您母亲的职业是",
+                name: 'Occupation',
+                options: [
+                    "临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民",
+                    "体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;",
+                    "一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如售货员、司机等;",
+                    "中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; ",
+                    "职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。"
+                ],
+                required: true
+            }
+        ],
         on_load: function () {
+            $(".jspsych-survey-multi-choice-question p").css({
+                "text-align": "center",
+                "font-size": "20px"
+            })
+            $(".jspsych-survey-multi-choice-question div").css({
+                "text-align": "left",
+                "width": "500px",
+                "margin": "10px 0 0 0",
+                "font-size": "15px"
+            })
         },
-        button_label: '继续',
+        button_label: "继续",
         on_finish: function (data) {
-
+            let cc = {
+                "临时工、失业、待业人员、非技术及农业劳动者阶层, 如农民": "1",
+                "体力劳动工人和个体经营人员、技术工及同级工作者, 如建筑工人及相关人员;": "2",
+                "一般管理人员与一般专业技术人员、事务性工作人员, 包括商业服务业员工阶层、办事人员阶层, 如售货员、司机等;": "3",
+                "中层管理人员与中层专业技术人员、助理专业人员, 包括在各种经济成分的机构( 包括国家机关、党群组织、全民企事业单位、集体企事业单位和各类非公有制经济企业) 中专门从事各种专业性工作和科学技术工作的人员, 如教师、医生、技师等; ": "4",
+                "职业高级管理人员与高级专业技术人员、专业主管人员, 包括在党政、事业和社会团体机关单位中行使实际的行政管理职权的领导干部、大中型企业中非业主身份的高中层管理人员和私营企业主阶层, 如公务员、公司经理、工头等。": "5"
+            };
+            data.response.Q0 = cc[data.response.Occupation]
         }
     }, {//社会阶级
         type: "instructions",
@@ -289,7 +348,7 @@
         preamble: "<p style = 'color : white'>现在，想想你自己的家庭。请告诉我们，你认为你自己的家庭处在这个梯子的哪个位置？请选出您认为最能代表您家庭在这个梯子上位置的数字。</p>",
         html: function () {
             return `
-                <p><select name="Q0" size=10>
+                <p><select name="Q0" size=10 required>
                 <option value=1>1</option>
                 <option value=2>2</option>
                 <option value=3>3</option>
